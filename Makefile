@@ -9,6 +9,8 @@ help:  ## list these targets
 	@grep -hE '^[a-z][a-z-]*:.*## ' $(MAKEFILE_LIST) \
 		| awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
 
+all: clean lint format check test
+
 install:  ## runtime dependencies
 	$(PYTHON) -m pip install -r requirements.txt
 
@@ -48,14 +50,14 @@ version:  ## print the version jy reports
 	@$(PYTHON) -c "import jy; print(jy.__version__)"
 
 lint:  ## report style problems
-	ruff check .
+	ruff check --fix .
 
 format:  ## rewrite the code the way ruff wants it
 	ruff format .
 
 check:  ## before committing: formatting, lint, then the display-free tests
 	ruff format --check .
-	ruff check .
+	ruff check --fix .
 	$(PYTHON) -m pytest -m "not gui"
 
 clean:  ## remove caches

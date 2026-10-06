@@ -1,12 +1,12 @@
-# jy
+# view-json-yaml
 
 A viewer for large JSON and YAML documents, built with tkinter. It exists for two jobs:
 reading ReversingLabs `report.rl.json` scans, and finding your way around OpenAPI
 specifications.
 
 ```
-pip install view-json-yaml   # once published; installs the `jy` command
-jy --file=report.rl.json
+pip install view-json-yaml   # once published; installs the `view-json-yaml` command
+view-json-yaml --file=report.rl.json
 ```
 
 From a checkout:
@@ -17,7 +17,7 @@ make run FILE=examples/report.rl.json
 make demo
 ```
 
-`jy.py` is a single file with one dependency (`ruamel.yaml`, for YAML). `jq` is **not**
+`view-json-yaml.py` is a single file with one dependency (`ruamel.yaml`, for YAML). `jq` is **not**
 required: JSON is formatted the way `jq --indent 2 -r .` would, in pure Python.
 
 ## What it does
@@ -62,26 +62,26 @@ Click the gutter or double-click a bracket to fold. Right-click for the copy men
 ## Command line
 
 ```
-python3 jy.py                                  # start empty
-python3 jy.py --file=examples/openapi.yaml     # open a file straight away
+python3 view-json-yaml.py                                  # start empty
+python3 view-json-yaml.py --file=examples/openapi.yaml     # open a file straight away
 ```
 
 Anything that is not `.json`, `.yaml` or `.yml` is refused with a warning. Files over 1 MB
 show a progress window naming each step; a 5 MB report takes a couple of seconds.
 
-The last 25 files opened are remembered in `~/.jy/recent.txt` — the directory is named
-after the script, so renaming `jy.py` moves it.
+The last 25 files opened are remembered in `~/.view-json-yaml/recent.txt` — the directory is named
+after the script, so renaming `view-json-yaml.py` moves it.
 
 ## Layout of the repository
 
 | path | |
 |------|--|
-| `jy.py` | the application, one file |
+| `view-json-yaml.py` | the application, one file |
 | `jy_spec.md` | the specification: numbered rules, the decisions behind them, and the known limits |
-| `tests/` | 177 tests; see `tests/README.md`. They also run flat beside `jy.py` |
+| `tests/` | 177 tests; see `tests/README.md`. They also run flat beside `view-json-yaml.py` |
 | `examples/` | a sample scan and a sample spec, both used by the tests |
 | `Makefile` | `make help` lists everything |
-| `pyproject.toml` | packaging; hatchling, with the version read from `jy.py` |
+| `pyproject.toml` | packaging; hatchling, with the version read from `view-json-yaml.py` |
 
 ## Development
 
@@ -101,9 +101,9 @@ make publish-test   # TestPyPI
 make publish        # PyPI
 ```
 
-The distribution is **`view-json-yaml`**; the import name and the command are both `jy`. They
-differ because `jy` on PyPI is already an unrelated JavaScript-interop package. The version
-lives in one place, `__version__` in `jy.py`, and hatchling reads it from there.
+The distribution is **`view-json-yaml`**; the import name and the command are both `view-json-yaml`. They
+differ because `view-json-yaml` on PyPI is already an unrelated JavaScript-interop package. The version
+lives in one place, `__version__` in `view-json-yaml.py`, and hatchling reads it from there.
 
 Before the first upload: choose a licence, add the file, and uncomment the `license` and
 `project.urls` lines in `pyproject.toml`. Then rehearse on TestPyPI —

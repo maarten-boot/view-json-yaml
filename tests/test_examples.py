@@ -7,19 +7,19 @@ supposed to show rather than merely that it parses.
 from __future__ import annotations
 
 import pytest
+
+import view_json_yaml
 from conftest import EXAMPLES
 
-import jy
+
+@pytest.fixture(scope="module")
+def report() -> view_json_yaml.Document:
+    return view_json_yaml.load_document(EXAMPLES / "report.rl.json")
 
 
 @pytest.fixture(scope="module")
-def report() -> jy.Document:
-    return jy.load_document(EXAMPLES / "report.rl.json")
-
-
-@pytest.fixture(scope="module")
-def spec() -> jy.Document:
-    return jy.load_document(EXAMPLES / "openapi.yaml")
+def spec() -> view_json_yaml.Document:
+    return view_json_yaml.load_document(EXAMPLES / "openapi.yaml")
 
 
 def test_the_examples_are_where_the_readme_says():
@@ -29,22 +29,24 @@ def test_the_examples_are_where_the_readme_says():
 
 class TestReportExample:
     def test_it_carries_all_three_statuses(self, report):
-        assert set(jy.collect_status_lines(report)) >= {"pass", "warning", "fail"}
+        assert set(view_json_yaml.collect_status_lines(report)) >= {"pass", "warning", "fail"}
 
     def test_it_has_components_to_cross_reference(self, report):
         components = [
-            path.parts for path in report.paths.values() if len(path.parts) == 4 and path.parts[-2] == jy.COMPONENTS_KEY
+            path.parts
+            for path in report.paths.values()
+            if len(path.parts) == 4 and path.parts[-2] == view_json_yaml.COMPONENTS_KEY
         ]
         assert len(components) == 4
 
     def test_one_component_has_no_status(self, report):
         """So the example shows a uuid that is deliberately left uncoloured."""
-        statuses = jy.collect_status_lines(report)
-        coloured = sum(len(lines) for value, lines in statuses.items() if value in jy.STATUS_COLORS)
+        statuses = view_json_yaml.collect_status_lines(report)
+        coloured = sum(len(lines) for value, lines in statuses.items() if value in view_json_yaml.STATUS_COLORS)
         assert coloured < len(report.lines)
 
     def test_it_has_violations_with_rule_ids(self, report):
-        rules = [line for line, node in report.nodes.items() if node.key == jy.RULE_ID_KEY]
+        rules = [line for line, node in report.nodes.items() if node.key == view_json_yaml.RULE_ID_KEY]
         assert len(rules) == 3
 
     def test_a_brace_in_a_string_is_not_structure(self, report):
@@ -92,4 +94,4 @@ class TestSpecExample:
 
     def test_it_has_a_status_free_document(self, spec):
         """Which is what makes the left pane minimise - worth having an example of."""
-        assert jy.collect_status_lines(spec) == {}
+        assert view_json_yaml.collect_status_lines(spec) == {}

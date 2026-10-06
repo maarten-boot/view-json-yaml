@@ -13,13 +13,13 @@ from pathlib import Path
 
 import pytest
 
+import view_json_yaml
+
 HERE = Path(__file__).resolve().parent
-# The tests run whether they sit in tests/ or flat beside jy.py, so find the project rather than assume it.
-PROJECT = next((place for place in (HERE, HERE.parent) if (place / "jy.py").is_file()), HERE)
+# The tests run whether they sit in tests/ or flat beside view_json_yaml.py, so find the project rather than assume it.
+PROJECT = next((place for place in (HERE, HERE.parent) if (place / "view_json_yaml.py").is_file()), HERE)
 EXAMPLES = PROJECT / "examples"
 sys.path.insert(0, str(PROJECT))
-
-import jy
 
 
 def pytest_configure(config):
@@ -117,13 +117,13 @@ def spec_yaml(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def report_document() -> jy.Document:
-    return jy.build_document(REPORT)
+def report_document() -> view_json_yaml.Document:
+    return view_json_yaml.build_document(REPORT)
 
 
 @pytest.fixture
-def spec_document() -> jy.Document:
-    return jy.build_yaml_document(SPEC)
+def spec_document() -> view_json_yaml.Document:
+    return view_json_yaml.build_yaml_document(SPEC)
 
 
 @pytest.fixture
@@ -135,7 +135,7 @@ def big_json(tmp_path: Path) -> Path:
     }
     path = tmp_path / "big.json"
     path.write_text(json.dumps({"report": {"metadata": {"components": bulk}}}), encoding="utf-8")
-    assert path.stat().st_size > jy.LARGE_FILE_BYTES
+    assert path.stat().st_size > view_json_yaml.LARGE_FILE_BYTES
     return path
 
 
@@ -147,10 +147,10 @@ def app(monkeypatch, tmp_path):
     home.mkdir()
     monkeypatch.setenv("HOME", str(home))
     monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
-    monkeypatch.setattr(sys, "argv", ["jy.py"])
+    monkeypatch.setattr(sys, "argv", ["view_json_yaml.py"])
 
     try:
-        application = jy.App()
+        application = view_json_yaml.App()
     except tkinter.TclError as exc:  # no display
         pytest.skip(f"Tk cannot open a display: {exc}")
 
@@ -174,7 +174,7 @@ def loaded_yaml(app, spec_yaml):
     return app
 
 
-def line_of(document: jy.Document, needle: str) -> int:
+def line_of(document: view_json_yaml.Document, needle: str) -> int:
     """The first line containing `needle`, so tests read by content rather than by counting."""
     for number, line in enumerate(document.lines, start=1):
         if needle in line:

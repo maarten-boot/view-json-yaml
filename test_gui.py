@@ -13,9 +13,9 @@ from __future__ import annotations
 import json
 
 import pytest
-from conftest import line_of
 
-import jy
+import view_json_yaml
+from conftest import line_of
 
 pytestmark = pytest.mark.gui
 
@@ -41,8 +41,8 @@ class TestLayout:
         assert len(app.content.panes()) == 3
 
     def test_the_text_window_is_black_on_white(self, app):
-        assert app.text.cget("foreground") == jy.FG_COLOR
-        assert app.text.cget("background") == jy.BG_COLOR
+        assert app.text.cget("foreground") == view_json_yaml.FG_COLOR
+        assert app.text.cget("background") == view_json_yaml.BG_COLOR
 
     def test_the_text_window_is_read_only(self, loaded):
         before = loaded.text.get("1.0", "end")
@@ -73,15 +73,15 @@ class TestTreeStyle:
     """A selected row must keep the colour its status gave it (rule X3)."""
 
     def test_selection_is_very_light_grey(self, app):
-        style = app.tk.call("ttk::style", "map", jy.TREE_STYLE, "-background")
-        assert jy.VERY_LIGHT_GRAY in str(style)
+        style = app.tk.call("ttk::style", "map", view_json_yaml.TREE_STYLE, "-background")
+        assert view_json_yaml.VERY_LIGHT_GRAY in str(style)
 
     def test_no_selected_foreground_overrides_the_tag(self, app):
-        mapping = str(app.tk.call("ttk::style", "map", jy.TREE_STYLE, "-foreground"))
+        mapping = str(app.tk.call("ttk::style", "map", view_json_yaml.TREE_STYLE, "-foreground"))
         assert "selected" not in mapping
 
     def test_the_status_tags_carry_their_colours(self, loaded):
-        for value, colour in jy.STATUS_COLORS.items():
+        for value, colour in view_json_yaml.STATUS_COLORS.items():
             assert str(loaded.tree.tag_configure(value, "foreground")) == colour
 
 
@@ -102,7 +102,9 @@ class TestLoading:
 
     def test_a_bad_extension_is_refused(self, app, tmp_path, monkeypatch):
         shown = {}
-        monkeypatch.setattr(jy.messagebox, "showwarning", lambda title, message: shown.setdefault("message", message))
+        monkeypatch.setattr(
+            view_json_yaml.messagebox, "showwarning", lambda title, message: shown.setdefault("message", message)
+        )
         rubbish = tmp_path / "notes.txt"
         rubbish.write_text("{}")
         app.open_argument(rubbish)
@@ -110,7 +112,7 @@ class TestLoading:
         assert shown and not app.current_json
 
     def test_a_broken_file_reports_and_keeps_going(self, app, tmp_path, monkeypatch):
-        monkeypatch.setattr(jy.messagebox, "showerror", lambda *args: None)
+        monkeypatch.setattr(view_json_yaml.messagebox, "showerror", lambda *args: None)
         broken = tmp_path / "broken.json"
         broken.write_text("{nope")
         app.open_path(broken)
@@ -163,10 +165,10 @@ class TestFolding:
         opened = line_of(loaded.document, '"licenses"')
         loaded.toggle_fold(opened)
         loaded.update()
-        assert loaded.gutter.get(f"{opened}.0", f"{opened}.1") == jy.ARROW_CLOSED
+        assert loaded.gutter.get(f"{opened}.0", f"{opened}.1") == view_json_yaml.ARROW_CLOSED
         loaded.toggle_fold(opened)
         loaded.update()
-        assert loaded.gutter.get(f"{opened}.0", f"{opened}.1") == jy.ARROW_OPEN
+        assert loaded.gutter.get(f"{opened}.0", f"{opened}.1") == view_json_yaml.ARROW_OPEN
 
     def test_clicking_the_gutter_folds(self, loaded):
         opened = line_of(loaded.document, '"licenses"')
@@ -221,15 +223,15 @@ class TestColouring:
 
     def test_a_uuid_mention_takes_the_component_colour(self, loaded):
         mention = line_of(loaded.document, '"about"')
-        assert mention in self.lines_tagged(loaded.text, jy.REFERENCE_TAGS["fail"])
+        assert mention in self.lines_tagged(loaded.text, view_json_yaml.REFERENCE_TAGS["fail"])
 
     def test_a_rule_id_mention_is_coloured(self, loaded):
         mention = line_of(loaded.document, '"rule"')
-        assert mention in self.lines_tagged(loaded.text, jy.REFERENCE_TAGS["fail"])
+        assert mention in self.lines_tagged(loaded.text, view_json_yaml.REFERENCE_TAGS["fail"])
 
     def test_the_reference_tags_sit_above_the_status_tags(self, loaded):
         order = loaded.text.tag_names()
-        assert order.index(jy.REFERENCE_TAGS["fail"]) > order.index("fail")
+        assert order.index(view_json_yaml.REFERENCE_TAGS["fail"]) > order.index("fail")
 
 
 class TestSelectionAndShading:
@@ -427,7 +429,7 @@ class TestClipboard:
         loaded.collapse_all()
         loaded.go_to(1)
         loaded.copy_block()
-        assert jy.FOLD_MARK.strip() not in loaded.clipboard_get()
+        assert view_json_yaml.FOLD_MARK.strip() not in loaded.clipboard_get()
 
     def test_copying_the_current_line(self, loaded):
         line = line_of(loaded.document, '"libfoo"')
@@ -455,14 +457,14 @@ class TestClipboard:
 class TestHover:
     def test_hovering_a_coloured_item_names_its_origin(self, loaded, monkeypatch):
         shown = {}
-        monkeypatch.setattr(jy.Tooltip, "show", lambda self, text, x, y: shown.setdefault("text", text))
+        monkeypatch.setattr(view_json_yaml.Tooltip, "show", lambda self, text, x, y: shown.setdefault("text", text))
         line = line_of(loaded.document, '"libfoo"')
         loaded.text.see(f"{line}.0")
         loaded.update_idletasks()
         box = loaded.text.bbox(f"{line}.4")
         loaded.text.event_generate("<Motion>", x=box[0], y=box[1] + box[3] // 2)
         loaded.update()
-        loaded.after(jy.HOVER_DELAY_MS + 150, loaded.quit)
+        loaded.after(view_json_yaml.HOVER_DELAY_MS + 150, loaded.quit)
         loaded.mainloop()
         assert "status" in shown.get("text", "")
 
