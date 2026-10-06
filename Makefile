@@ -63,11 +63,11 @@ build: $(STAMP)  ## build the wheel and the sdist into dist/ (hatchling does the
 	$(PY) -m build
 
 publish-test: $(STAMP)  ## upload to TestPyPI first; install from there before the real thing
-	$(PY) -m twine upload --repository testpypi dist/*
+	$(PY) -m twine upload --repository mboot_testpypi dist/*
 
 publish: $(STAMP)  ## upload to PyPI
 	$(PY) -m twine check dist/*
-	$(PY) -m twine upload dist/*
+	$(PY) -m twine upload --repository mboot_pypi dist/*
 
 version: $(STAMP)  ## print the version the app reports
 	@$(PY) -c "import view_json_yaml; print(view_json_yaml.__version__)"
