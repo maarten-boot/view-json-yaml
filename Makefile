@@ -1,4 +1,4 @@
-# jy - a viewer for JSON and YAML.  `make help` lists the targets.
+# view-json-yaml - a viewer for JSON and YAML.  `make help` lists the targets.
 
 PYTHON ?= python3
 FILE ?=
@@ -17,11 +17,11 @@ install:  ## runtime dependencies
 install-dev:  ## runtime dependencies plus pytest and ruff
 	$(PYTHON) -m pip install -r requirements-dev.txt
 
-run:  ## start jy, optionally on a file: make run FILE=report.rl.json
-	$(PYTHON) jy.py $(if $(FILE),--file=$(FILE))
+run:  ## start view-json-yaml, optionally on a file: make run FILE=report.rl.json
+	$(PYTHON) view_json_yaml.py $(if $(FILE),--file=$(FILE))
 
 demo:  ## open the sample OpenAPI spec
-	$(PYTHON) jy.py --file=examples/openapi.yaml
+	$(PYTHON) view_json_yaml.py --file=examples/openapi.yaml
 
 test:  ## the whole suite
 	$(PYTHON) -m pytest
@@ -46,8 +46,8 @@ publish:  ## upload to PyPI
 	$(PYTHON) -m twine check dist/*
 	$(PYTHON) -m twine upload dist/*
 
-version:  ## print the version jy reports
-	@$(PYTHON) -c "import jy; print(jy.__version__)"
+version:  ## print the version view-json-yaml reports
+	@$(PYTHON) -c "import view_json_yaml; print(view_json_yaml.__version__)"
 
 lint:  ## report style problems
 	ruff check --fix .

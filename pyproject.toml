@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-# The distribution is "view-json-yaml"; the import name and the command are both "jy". They differ because "jy" on
-# PyPI is already an unrelated JavaScript-interop package. Check any replacement at https://pypi.org/project/<name>/.
+# The distribution and the command are "view-json-yaml"; the module is "view_json_yaml", since a module name
+# cannot contain a hyphen. Check any replacement name at https://pypi.org/project/<name>/ before publishing.
 name = "view-json-yaml"
 dynamic = ["version"]
 description = "A tkinter viewer for JSON and YAML: folding, status colouring, $ref navigation"
@@ -13,9 +13,8 @@ requires-python = ">=3.10"
 keywords = ["json", "yaml", "viewer", "openapi", "tkinter", "sbom"]
 dependencies = ["ruamel.yaml>=0.17,<1.0"]
 
-# Pick a licence before publishing, add the file, then uncomment:
-# license = "MIT"
-# license-files = ["LICENSE"]
+license = "MIT"
+license-files = ["LICENSE"]
 
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -33,27 +32,27 @@ classifiers = [
 dev = ["pytest>=7.0", "ruff>=0.6", "build>=1.0", "twine>=5.0"]
 
 [project.scripts]
-jy = "jy:main"
+view-json-yaml = "view_json_yaml:main"
 
 # [project.urls]
-# Homepage = "https://github.com/<you>/jy"
-# Issues = "https://github.com/<you>/jy/issues"
+# Homepage = "https://github.com/<you>/view-json-yaml"
+# Issues = "https://github.com/<you>/view-json-yaml/issues"
 
 [tool.hatch.version]
-# One source of truth: __version__ in jy.py.
-path = "jy.py"
+# One source of truth: __version__ in view_json_yaml.py.
+path = "view_json_yaml.py"
 
 [tool.hatch.build.targets.wheel]
 # A single module at the root, so hatchling is told outright rather than left to guess.
-only-include = ["jy.py"]
+only-include = ["view_json_yaml.py"]
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "jy.py",
+    "view_json_yaml.py",
     "tests/",
     "examples/",
     "README.md",
-    "jy_spec.md",
+    "view_json_yaml_spec.md",
     "Makefile",
     "pytest.ini",
     "ruff.toml",

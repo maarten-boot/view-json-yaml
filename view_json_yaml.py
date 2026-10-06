@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""jy - a Tkinter viewer for JSON and YAML, with a status-path list, folding, and status colouring.
+"""view-json-yaml - a Tkinter viewer for JSON and YAML, with a status-path list, folding, and status colouring.
 
 Layout (top to bottom):
     * menu bar      - Files / View / Help
@@ -31,7 +31,7 @@ try:
     from tkinter import filedialog, messagebox, ttk
 except ModuleNotFoundError as exc:  # pip cannot supply tkinter; the system package manager has to
     raise SystemExit(
-        "jy needs tkinter, which ships separately from Python on most Linux distributions:\n"
+        "view-json-yaml needs tkinter, which ships separately from Python on most Linux distributions:\n"
         "  Debian/Ubuntu   sudo apt install python3-tk\n"
         "  Fedora          sudo dnf install python3-tkinter\n"
         "  macOS/Windows   use a python.org build, which includes it"
@@ -43,11 +43,11 @@ from ruamel.yaml.error import YAMLError
 
 __version__ = "0.1.0"
 
-APP_NAME = "jy"
+APP_NAME = "view-json-yaml"
 # L: the last opened files live in ~/.<script name>/recent.txt, newest first.
 RECENT_LIMIT = 25
 RECENT_FILE = "recent.txt"
-FALLBACK_SLUG = "jy"
+FALLBACK_SLUG = "view-json-yaml"
 # O: past this size the load runs behind a progress window, reporting each stage below.
 LARGE_FILE_BYTES = 1_000_000
 PROCESSING_STEPS = (
@@ -146,8 +146,12 @@ class DocumentError(RuntimeError):
 
 
 def app_directory() -> Path:
-    """The app's hidden directory in HOME, named after the script: jy.py -> ~/.jy."""
-    slug = Path(sys.argv[0]).stem or FALLBACK_SLUG
+    """The app's hidden directory in HOME, named after the command.
+
+    Started as `view-json-yaml` the stem is already the command; started as `python3 view_json_yaml.py` it is the
+    module name. Underscores fold to hyphens so both land in the same directory instead of keeping two lists.
+    """
+    slug = Path(sys.argv[0]).stem.replace("_", "-") or FALLBACK_SLUG
     return Path.home() / f".{slug}"
 
 
@@ -1428,7 +1432,7 @@ class App(tk.Tk):
         self.set_status(f"Opened {path} \u2014 {self._load_report(collapsed)}")
 
     def open_argument(self, path: Path) -> None:
-        """Open the file named by --file, refusing anything jy does not read."""
+        """Open the file named by --file, refusing anything view-json-yaml does not read."""
         if not is_supported_file(path):
             accepted = ", ".join(JSON_SUFFIXES + YAML_SUFFIXES)
             messagebox.showwarning(APP_NAME, f"Ignoring {path}:\n\nonly {accepted} files are accepted.")

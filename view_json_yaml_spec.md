@@ -1,6 +1,6 @@
-# jy — Specification
+# view-json-yaml — Specification
 
-`jy` reads JSON and YAML.
+`view-json-yaml` reads JSON and YAML.
 
 A Tkinter application for reading large structured documents: ReversingLabs `report.rl.json`
 scans, and OpenAPI YAML specifications. Requirements are numbered so an iteration can name
@@ -69,7 +69,7 @@ emitted while the document is prepared, never scanned back out of the displayed 
 | id | rule |
 |----|------|
 | R1 | Remember the last 25 files opened, by absolute path |
-| R2 | Store them in a hidden directory in `$HOME` named after the app — `basename argv[0]` without the `.py` extension, so `jy.py` uses `~/.jy` |
+| R2 | Store them in a hidden directory in `$HOME` named after the app — `basename argv[0]` without the `.py` extension, so both `view-json-yaml` and `view_json_yaml.py` use `~/.view-json-yaml` |
 | R3 | Keep the list of recently opened files in that directory |
 
 ## §5 Text window
