@@ -79,5 +79,7 @@ clean:  ## remove caches and build output, keeping the venv
 distclean: clean  ## also remove the virtual environment
 	rm -rf $(VENV)
 
+all: distclean lint format check build
+
 .PHONY: help venv run demo test test-fast test-gui test-headless lint format check build \
 	publish-test publish version clean distclean
