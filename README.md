@@ -5,7 +5,7 @@ reading ReversingLabs `report.rl.json` scans, and finding your way around OpenAP
 specifications.
 
 ```
-pip install jy-viewer     # once published; installs the `jy` command
+pip install view-json-yaml   # once published; installs the `jy` command
 jy --file=report.rl.json
 ```
 
@@ -101,7 +101,7 @@ make publish-test   # TestPyPI
 make publish        # PyPI
 ```
 
-The distribution is **`jy-viewer`**; the import name and the command are both `jy`. They
+The distribution is **`view-json-yaml`**; the import name and the command are both `jy`. They
 differ because `jy` on PyPI is already an unrelated JavaScript-interop package. The version
 lives in one place, `__version__` in `jy.py`, and hatchling reads it from there.
 
@@ -110,7 +110,7 @@ Before the first upload: choose a licence, add the file, and uncomment the `lice
 
 ```
 make build && make publish-test
-pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple jy-viewer
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple view-json-yaml
 ```
 
 `tkinter` cannot be installed by pip. A system without it gets a clear message naming the

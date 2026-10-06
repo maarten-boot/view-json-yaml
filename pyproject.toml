@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-# The import name and the command are both "jy"; the distribution name is not, because "jy" is already taken on
-# PyPI by an unrelated JavaScript-interop package. Check any replacement at https://pypi.org/project/<name>/ first.
-name = "jy-viewer"
+# The distribution is "view-json-yaml"; the import name and the command are both "jy". They differ because "jy" on
+# PyPI is already an unrelated JavaScript-interop package. Check any replacement at https://pypi.org/project/<name>/.
+name = "view-json-yaml"
 dynamic = ["version"]
 description = "A tkinter viewer for JSON and YAML: folding, status colouring, $ref navigation"
 readme = "README.md"
