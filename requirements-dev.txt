@@ -1,7 +1,10 @@
-# Everything in requirements.txt, plus what the tests, the linter and publishing need.
-#   pip install -r requirements-dev.txt
-# or, equivalently, from the packaging metadata:
-#   pip install -e ".[dev]"
+# What the tests, the linter and publishing need, on top of requirements.txt.
+#
+# `make venv` does not read this file: it installs the project with its "dev" extra from
+# pyproject.toml, which lists the same things. This file is here for anyone who would
+# rather not use make:
+#     pip install -r requirements-dev.txt
+# The Makefile watches it, so editing it rebuilds the venv.
 
 -r requirements.txt
 
