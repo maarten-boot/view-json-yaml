@@ -1,0 +1,11 @@
+# Everything in requirements.txt, plus what the tests, the linter and publishing need.
+#   pip install -r requirements-dev.txt
+# or, equivalently, from the packaging metadata:
+#   pip install -e ".[dev]"
+
+-r requirements.txt
+
+pytest>=7.0
+ruff>=0.6
+build>=1.0
+twine>=5.0

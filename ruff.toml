@@ -1,0 +1,8 @@
+# Rules C1 and C2 from the specification, in the one place that enforces them.
+line-length = 120
+indent-width = 4
+
+[lint]
+# jy is started with `python3 jy.py` or `make run`, so whether the file carries the executable bit is filesystem
+# state rather than something the source should be judged on. Drop this ignore if you commit it as executable.
+ignore = ["EXE001"]

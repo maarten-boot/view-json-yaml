@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+# The import name and the command are both "jy"; the distribution name is not, because "jy" is already taken on
+# PyPI by an unrelated JavaScript-interop package. Check any replacement at https://pypi.org/project/<name>/ first.
+name = "jy-viewer"
+dynamic = ["version"]
+description = "A tkinter viewer for JSON and YAML: folding, status colouring, $ref navigation"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["json", "yaml", "viewer", "openapi", "tkinter", "sbom"]
+dependencies = ["ruamel.yaml>=0.17,<1.0"]
+
+# Pick a licence before publishing, add the file, then uncomment:
+# license = "MIT"
+# license-files = ["LICENSE"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: X11 Applications",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Utilities",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "ruff>=0.6", "build>=1.0", "twine>=5.0"]
+
+[project.scripts]
+jy = "jy:main"
+
+# [project.urls]
+# Homepage = "https://github.com/<you>/jy"
+# Issues = "https://github.com/<you>/jy/issues"
+
+[tool.hatch.version]
+# One source of truth: __version__ in jy.py.
+path = "jy.py"
+
+[tool.hatch.build.targets.wheel]
+# A single module at the root, so hatchling is told outright rather than left to guess.
+only-include = ["jy.py"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "jy.py",
+    "tests/",
+    "examples/",
+    "README.md",
+    "jy_spec.md",
+    "Makefile",
+    "pytest.ini",
+    "ruff.toml",
+    "requirements.txt",
+    "requirements-dev.txt",
+]

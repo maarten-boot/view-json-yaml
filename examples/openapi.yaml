@@ -1,0 +1,90 @@
+# A small OpenAPI spec, shaped to exercise everything jy does with YAML:
+# $ref links, an unresolvable ref, an external ref, an anchor, a merge key,
+# block scalars and a flow mapping.
+openapi: 3.0.3
+
+info:
+  title: Pet store
+  version: "1.0"          # a trailing comment survives, because YAML is not re-rendered
+  description: |-
+    A tiny store for pets.
+
+    The blank line above is part of this text, and the whole
+    block folds as one.
+
+servers:
+  - url: https://api.example.invalid/v1
+  - url: https://staging.example.invalid/v1
+
+defaults: &defaults
+  retries: 3
+  timeout: 30
+
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      summary: List every pet
+      responses:
+        '200':
+          $ref: '#/components/responses/PetList'
+        default:
+          $ref: 'errors.yaml#/NotFound'          # external: marked, never followed
+    post:
+      operationId: createPet
+      requestBody:
+        $ref: '#/components/requestBodies/NewPet'
+      responses:
+        '201':
+          $ref: '#/components/responses/Pet'
+        '422':
+          $ref: '#/components/responses/Missing'  # internal, but nothing is defined there
+
+  /pets/{petId}:
+    get:
+      operationId: readPet
+      <<: *defaults
+      responses:
+        '200':
+          $ref: '#/components/responses/Pet'
+
+components:
+  responses:
+    PetList:
+      description: A page of pets
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Pet'
+    Pet:
+      description: One pet
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Pet'
+
+  requestBodies:
+    NewPet:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Pet'
+
+  schemas:
+    Pet:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string}
+        category:
+          $ref: '#/components/schemas/Category'
+    Category:
+      type: object
+      properties:
+        name: {type: string}
+        pet:
+          $ref: '#/components/schemas/Pet'       # a cycle: Pet -> Category -> Pet
+    Empty: {}
