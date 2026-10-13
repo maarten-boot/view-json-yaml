@@ -49,7 +49,10 @@ only-include = ["view_json_yaml.py"]
 [tool.hatch.build.targets.sdist]
 include = [
     "view_json_yaml.py",
+    # The test files run from tests/ or from the root; include both so the sdist is complete either way.
     "tests/",
+    "conftest.py",
+    "test_*.py",
     "examples/",
     "README.md",
     "view_json_yaml_spec.md",

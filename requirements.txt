@@ -1,4 +1,4 @@
-# Runtime dependencies for jy.
+# Runtime dependencies for view-json-yaml.
 #
 # tkinter is part of the standard library but ships separately on most Linux
 # distributions; install it with the system package manager, not pip:
